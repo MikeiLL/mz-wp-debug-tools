@@ -58,6 +58,54 @@ add_shortcode('view-in-a-page', 'view_in_a_page');
 
 function view_in_a_page() {
 
+	// BOF Output for debugging CPT
+// Does out Post Type exist?
+foreach ( get_post_types( '', 'names' ) as $post_type ) {
+   echo '<p>' . $post_type . '</p>';
+}
+
+
+//let's look at our CPT: 
+$type = 'classes';   
+$type_obj = get_post_type_object($type);
+    mz_pr($type_obj);
+
+    // Even if the archive page is working, we can see if our CPT is returning anything
+
+$args=array(
+    'post_type' => $type,
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'ignore_sticky_posts'=> 1);
+
+$my_query = null;
+$my_query = new WP_Query($args);
+if( $my_query->have_posts() ) {
+    while ($my_query->have_posts()) : 
+    $my_query->the_post(); 
+    ?>
+
+    <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to         <?php the_title_attribute(); ?>"><?php the_title(); ?> </a></p>
+
+    <?php
+
+    endwhile;
+
+} // list of yoga-event items
+    // See what the CPT thinks the post archive link is (if anything)
+mz_pr(get_post_type_archive_link( 'yoga-event' ));
+
+//Format arrays for display in development
+if ( ! function_exists( 'mz_pr' ) ) {
+    function mz_pr($message) {
+        echo "<pre>";
+        print_r($message);
+        echo "</pre>";
+    }
+}
+    //EOF Output for debugging CPT 
+	
+	
 	$type = 'keel-pets';
 	$args=array(
     'post_type' => $type,
