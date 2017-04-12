@@ -65,7 +65,7 @@ class LWD_Caregivers {
 	/**
 	 * Register Caregiver tags.
 	 *
-	 * @since 2.0.0
+	 * @since 1.0.0
 	 */
 	public static function register_tags() {
 
@@ -105,5 +105,101 @@ class LWD_Caregivers {
 		register_taxonomy( 'caregiver_tag', array( 'caregiver' ), $args );
 
 	}		
+	
+		/**
+	 * Register Caregiver category.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function register_categories() {
+
+		// Define and sanitize options
+		$name = __( 'Caregiver Categories', 'total' );
+		$slug = 'caregiver-category';
+
+		// Define args and apply filters for child theming
+		$args = array(
+			'labels' => array(
+				'name' => $name,
+				'singular_name' => $name,
+				'menu_name' => $name,
+				'search_items' => __( 'Search','total' ),
+				'popular_items' => __( 'Popular', 'total' ),
+				'all_items' => __( 'All', 'total' ),
+				'parent_item' => __( 'Parent', 'total' ),
+				'parent_item_colon' => __( 'Parent', 'total' ),
+				'edit_item' => __( 'Edit', 'total' ),
+				'update_item' => __( 'Update', 'total' ),
+				'add_new_item' => __( 'Add New', 'total' ),
+				'new_item_name' => __( 'New', 'total' ),
+				'separate_items_with_commas' => __( 'Separate with commas', 'total' ),
+				'add_or_remove_items' => __( 'Add or remove', 'total' ),
+				'choose_from_most_used' => __( 'Choose from the most used', 'total' ),
+			),
+			'public' => true,
+			'show_in_nav_menus' => true,
+			'show_ui' => true,
+			'show_tagcloud' => true,
+			'hierarchical' => true,
+			'rewrite' => array( 'slug' => $slug, 'with_front' => false ),
+			'query_var' => true
+		);
+
+		// Register the caregiver category taxonomy
+		register_taxonomy( 'caregiver_category', array( 'caregiver' ), $args );
+
+	}
+
+
+	/**
+	 * Adds columns to the WP dashboard edit screen.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function edit_columns( $columns ) {
+		if ( taxonomy_exists( 'caregiver_category' ) ) {
+			$columns['caregiver_category'] = esc_html__( 'Category', 'total' );
+		}
+		if ( taxonomy_exists( 'caregiver_tag' ) ) {
+			$columns['caregiver_tag'] = esc_html__( 'Tags', 'total' );
+		}
+		return $columns;
+	}
+
+
+	/**
+	 * Adds columns to the WP dashboard edit screen.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function column_display( $column, $post_id ) {
+
+		switch ( $column ) :
+
+			// Display the caregiver categories in the column view
+			case 'caregiver_category':
+
+				if ( $category_list = get_the_term_list( $post_id, 'caregiver_category', '', ', ', '' ) ) {
+					echo $category_list;
+				} else {
+					echo '&mdash;';
+				}
+
+			break;
+
+			// Display the caregiver tags in the column view
+			case 'caregiver_tag':
+
+				if ( $tag_list = get_the_term_list( $post_id, 'caregiver_tag', '', ', ', '' ) ) {
+					echo $tag_list;
+				} else {
+					echo '&mdash;';
+				}
+
+			break;
+
+		endswitch;
+
+	}
 } // EOF LWD_Caregivers
 ?>
