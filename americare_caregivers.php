@@ -33,7 +33,6 @@ add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_post_t
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_tags' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_categories' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'edit_columns' ), 0 );
-add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'custom_display' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ), 0 );
 
 // Render metaboxes via class
