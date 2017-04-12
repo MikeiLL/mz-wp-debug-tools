@@ -19,7 +19,7 @@ class LWD_Caregivers {
 	public static function register_post_type() {
 
 		// Get values and sanitize
-		$name          = 'caregivers';
+		$name          = 'Caregivers';
 		$singular_name = 'Caregiver';
 		$slug          = 'caregiver';
 		$menu_icon     = 'universal-access';
@@ -44,7 +44,7 @@ class LWD_Caregivers {
 				'editor',
 				'excerpt',
 				'thumbnail',
-				'comments',
+				// 'comments',
 				'custom-fields',
 				'revisions',
 				'author',
@@ -102,7 +102,7 @@ class LWD_Caregivers {
 		);
 
 		// Register the caregiver tag taxonomy
-		register_taxonomy( 'caregiver_tag', array( 'caregiver' ), $args );
+		register_taxonomy( 'caregiver_tag', array( 'caregivers' ), $args );
 
 	}		
 	
@@ -146,7 +146,7 @@ class LWD_Caregivers {
 		);
 
 		// Register the caregiver category taxonomy
-		register_taxonomy( 'caregiver_category', array( 'caregiver' ), $args );
+		register_taxonomy( 'caregiver_category', array( 'caregivers' ), $args );
 
 	}
 
@@ -201,5 +201,51 @@ class LWD_Caregivers {
 		endswitch;
 
 	}
+	
+	/**
+	 * Adds taxonomy filters to the caregiver admin page.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function tax_filters() {
+		global $typenow;
+		$taxonomies = array( 'caregiver_category', 'caregiver_tag' );
+		if ( 'caregiver' == $typenow ) {
+			foreach ( $taxonomies as $tax_slug ) {
+				if ( ! taxonomy_exists( $tax_slug ) ) {
+					continue;
+				}
+				$current_tax_slug = isset( $_GET[$tax_slug] ) ? $_GET[$tax_slug] : false;
+				$tax_obj = get_taxonomy( $tax_slug );
+				$tax_name = $tax_obj->labels->name;
+				$terms = get_terms($tax_slug);
+				if ( count( $terms ) > 0) {
+					echo "<select name='$tax_slug' id='$tax_slug' class='postform'>";
+					echo "<option value=''>$tax_name</option>";
+					foreach ( $terms as $term ) {
+						echo '<option value=' . $term->slug, $current_tax_slug == $term->slug ? ' selected="selected"' : '','>' . $term->name .' (' . $term->count .')</option>';
+					}
+					echo "</select>";
+				}
+			}
+		}
+	}
+
+	/**
+	 * Flush re-write rules
+	 *
+	 * @since 1.0.0
+	 */
+	public static function flush_rewrite_rules() {
+		$screen = get_current_screen();
+		echo $screen . "<br / >";
+		die();
+		if ( $screen->id == 'caregiver_page_lwd-caregiver-editor' ) {
+			flush_rewrite_rules();
+		}
+
+	}
+
+
 } // EOF LWD_Caregivers
 ?>

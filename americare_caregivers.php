@@ -26,5 +26,10 @@ require __DIR__ . "/src/Autoload.php";
 spl_autoload_register( [ new Loader\Autoload( 'lexweb', __DIR__ . '/src/' ), 'load' ] );
 
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_post_type' ), 0 );
+add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_tags' ), 0 );
+add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_categories' ), 0 );
+add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'edit_columns' ), 0 );
+add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'custom_display' ), 0 );
+add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ), 0 );
 
 ?>
