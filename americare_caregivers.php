@@ -25,6 +25,10 @@ if ( !defined( 'WPINC' ) ) {
 require __DIR__ . "/src/Autoload.php";
 spl_autoload_register( [ new Loader\Autoload( 'lexweb', __DIR__ . '/src/' ), 'load' ] );
 
+//define plugin path and directory
+define( 'LWD_CAREGIVER_DIR', plugin_dir_path( __FILE__ ) );
+define( 'LWD_CAREGIVER_URL', plugin_dir_url( __FILE__ ) );
+
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_post_type' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_tags' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_categories' ), 0 );
@@ -32,9 +36,21 @@ add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'edit_columns' )
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'custom_display' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ), 0 );
 
-
-$cg = new AMERICARE\LWD_Caregivers;
+// Render metaboxes via class
 $metaboxes = new AMERICARE\LWD_Custom_Meta_Box;
+
+/* Filter the single_template with our custom function*/
+add_filter('single_template', 'caregiver_template');
+
+function caregiver_template($single) {
+    global $wp_query, $post;
+        /* Checks for single template by post type */
+    if ($post->post_type == "caregivers"){
+        if(file_exists(LWD_CAREGIVER_DIR . 'templates/caregiver.php'))
+            return LWD_CAREGIVER_DIR . 'templates/caregiver.php';
+    }
+    return $single;
+}
 
 
 ?>

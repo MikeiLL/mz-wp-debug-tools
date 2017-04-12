@@ -31,26 +31,43 @@ class LWD_Custom_Meta_Box {
      */
     public function add_metabox() {
         add_meta_box(
-            'my-meta-box',
-            __( 'My Meta Box', 'textdomain' ),
+            'hobbies-meta-box',
+            __( 'Caregiver Details', 'textdomain' ),
             array( $this, 'render_metabox' ),
             'caregivers',
             'advanced',
+            'default',
             'high'
         );
  
     }
  
     /**
-     * Renders the meta box.
+     * Render hobbies meta box.
      */
     public function render_metabox( $post ) {
         // Add nonce for security and authentication.
-        wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+        wp_nonce_field( 'lwd_caregiver_action', 'lwd_caregiver_nonce' );
+	
+				// Noncename needed to verify where the data originated
+				echo '<input type="hidden" name="eventmeta_noncename" id="eventmeta_noncename" value="' . 
+				wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+	
+				$hobbies = get_post_meta($post->ID, '_hobbies', true);
+				$specializations = get_post_meta($post->ID, '_specializations', true);
+	
+				?>
+				<label for="hobbies">Hobbies</label>
+				<input type="text" name="_hobbies" value="<?=$hobbies?>" class="widefat" id="hobbies" />
+				<label for="specializations">Specializations</label>
+				<input type="text" name="_specializations" value="<?=$specializations?>" class="widefat" id="specializations" />
+				<?php
+
     }
+    
  
     /**
-     * Handles saving the meta box.
+     * Saving meta boxes.
      *
      * @param int     $post_id Post ID.
      * @param WP_Post $post    Post object.
@@ -58,8 +75,8 @@ class LWD_Custom_Meta_Box {
      */
     public function save_metabox( $post_id, $post ) {
         // Add nonce for security and authentication.
-        $nonce_name   = isset( $_POST['custom_nonce'] ) ? $_POST['custom_nonce'] : '';
-        $nonce_action = 'custom_nonce_action';
+        $nonce_name   = isset( $_POST['lwd_caregiver_nonce'] ) ? $_POST['lwd_caregiver_nonce'] : '';
+        $nonce_action = 'lwd_caregiver_action';
  
         // Check if nonce is set.
         if ( ! isset( $nonce_name ) ) {
@@ -85,6 +102,23 @@ class LWD_Custom_Meta_Box {
         if ( wp_is_post_revision( $post_id ) ) {
             return;
         }
+
+        // Put it into an array to make it easier to loop though.
+			
+				$events_meta['_hobbies'] = $_POST['_hobbies'];
+				$events_meta['_specializations'] = $_POST['_specializations'];
+	
+				// Add values of $events_meta as custom fields
+	
+				foreach ($events_meta as $key => $value) { // Cycle through the $events_meta array!
+					$value = implode(',', (array)$value); // If $value is an array, make it a CSV (unlikely)
+					if(get_post_meta($post->ID, $key, FALSE)) { // If the custom field already has a value
+						update_post_meta($post->ID, $key, $value);
+					} else { // If the custom field doesn't have a value
+						add_post_meta($post->ID, $key, $value);
+					}
+					if(!$value) delete_post_meta($post->ID, $key); // Delete if blank
+				}
     }
 }
  
