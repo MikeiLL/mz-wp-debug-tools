@@ -32,4 +32,9 @@ add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'edit_columns' )
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'custom_display' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ), 0 );
 
+
+$cg = new AMERICARE\LWD_Caregivers;
+$metaboxes = new AMERICARE\LWD_Custom_Meta_Box;
+
+
 ?>
