@@ -1,7 +1,6 @@
-(function($){
- 
+jQuery(document).ready(function( $ ) {
     var $container = $('#caregivers');
- 		console.log($container);
+
     // create a clone that will be used for measuring container width
     $containerProxy = $container.clone().empty().css({ visibility: 'hidden' });   
  
@@ -9,16 +8,16 @@
  
     // get the first item to use for measuring columnWidth
     var $item = $container.find('.caregiver-item').eq(0);
-    console.log($item);
+
     $container.imagesLoaded(function(){
         $(window).smartresize( function() {
  
             // calculate columnWidth
-            var colWidth = Math.floor( $containerProxy.width() / 2 ); // Change this number to your desired amount of columns
+            var colWidth = Math.floor( $containerProxy.width() / 3 ); // Change this number to your desired amount of columns
  
             // set width of container based on columnWidth
             $container.css({
-                width: colWidth * 2 // Change this number to your desired amount of columns
+                width: colWidth * 3 // Change this number to your desired amount of columns
             })
             .isotope({
  
@@ -37,7 +36,6 @@
  
     // filter items when filter link is clicked
     $('#filters a').click(function(){
-        
         var selector = $(this).attr('data-filter');
         $container.isotope({ filter: selector, animationEngine : "css" });
         $('#filters a.active').removeClass('active');
@@ -46,4 +44,4 @@
  
     });
  
-} ) ( jQuery );
+});

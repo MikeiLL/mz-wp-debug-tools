@@ -54,7 +54,7 @@ get_header(); ?>
           echo '</div>'; 
       endwhile; ?>
  
-   </div><!-- #portfolio -->
+   </div><!-- #caregivers -->
  
   </div><!-- #page -->
  
