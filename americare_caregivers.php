@@ -34,9 +34,19 @@ add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_tags' 
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'register_categories' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'edit_columns' ), 0 );
 add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ), 0 );
+add_filter('archive_template', array('lexweb\\AMERICARE\\LWD_Caregivers', 'get_custom_archive_template'));
 
 // Render metaboxes via class
 $metaboxes = new AMERICARE\LWD_Custom_Meta_Box;
+
+if (!is_admin()) add_action( 'wp_enqueue_scripts', 'load_isotope' );
+
+function load_isotope() {
+    // scripts will load in footer
+	wp_enqueue_script( 'isotope-js', LWD_CAREGIVER_URL . 'js/jquery.isotope.min.js', array( 'jquery' ), true );
+	wp_enqueue_script( 'caregiver-js', LWD_CAREGIVER_URL . 'js/caregiver.js', array( 'jquery' ), true );
+	wp_enqueue_style( 'caregiver', LWD_CAREGIVER_URL . 'css/caregiver.css');
+}
 
 /* Filter the single_template with our custom function*/
 add_filter('single_template', 'caregiver_template');

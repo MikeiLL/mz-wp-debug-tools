@@ -245,30 +245,53 @@ class LWD_Caregivers {
 		}
 
 	}
-	
-	// Add the Caregivers Meta Boxes
 
-	public static function add_caregivers_metaboxes() {
-		add_meta_box('lwd_caregiver_metabox_display', 'Hobbies', array($this, 'lwd_caregiver_metabox_display'), 'caregivers', 'normal', 'high');
+	/**
+	 * Pull in our archive template
+	 *
+	 * @since 1.0.0
+	 * source: http://wordpress.stackexchange.com/a/89832/48604
+	 */	
+
+	public function get_custom_archive_template($template) {
+			global $wp_query;
+			if (is_post_type_archive('caregivers')) {
+					$templates[] = 'archive-caregivers.php';
+					$template = SELF::locate_plugin_template($templates);
+			}
+			return $template;
 	}
-
-	// The Event Location Metabox
-
-	private function lwd_caregiver_metabox_display() {
-		global $post;
 	
-		// Noncename needed to verify where the data originated
-		echo '<input type="hidden" name="eventmeta_noncename" id="eventmeta_noncename" value="' . 
-		wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
-	
-		// Get the location data if its already been entered
-		$location = get_post_meta($post->ID, '_location', true);
-	
-		// Echo out the field
-		echo '<input type="text" name="_location" value="' . $location  . '" class="widefat" />';
-
-	}
-
+	/**
+	 * Search theme for template, then use the plugin on if not found.
+	 *
+	 * @since 1.0.0
+	 * source: http://wordpress.stackexchange.com/a/89832/48604
+	 */	
+	public function locate_plugin_template($template_names, $load = false, $require_once = true ) {
+    if (!is_array($template_names)) {
+        return '';
+    }
+    $located = '';  
+    foreach ( $template_names as $template_name ) {
+        if ( !$template_name )
+            continue;
+        if ( file_exists(STYLESHEETPATH . '/' . $template_name)) {
+            $located = STYLESHEETPATH . '/' . $template_name;
+            break;
+        } elseif ( file_exists(TEMPLATEPATH . '/' . $template_name) ) {
+            $located = TEMPLATEPATH . '/' . $template_name;
+            break;
+        } elseif ( file_exists( LWD_CAREGIVER_DIR . 'templates/' . $template_name) ) {
+            $located =  LWD_CAREGIVER_DIR . 'templates/' . $template_name;
+            break;
+        }
+    }
+    if ( $load && $located != '' ) {
+        load_template( $located, $require_once );
+    }
+    return $located;
+}
 
 
 } // EOF LWD_Caregivers
