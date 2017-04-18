@@ -8,6 +8,7 @@ use lexweb\AMERICARE;
  *
  * Plugin Name: Caregiver Match
  * Description: 	Match caregivers with clients based on specific criteris using Isotope
+ * Full Description: 	Match caregivers with clients based on specific criteris using Isotope. Caregivers is the name of a CPT, which includes custom fields and also accepts tags and categories.
  * Version: 		1.0.0
  * Author: 			LexWebDev.com
  * Author URI: 		http://www.lexwebdev.com
@@ -37,7 +38,7 @@ add_action( 'init', array( 'lexweb\\AMERICARE\\LWD_Caregivers', 'tax_filters' ),
 add_filter('archive_template', array('lexweb\\AMERICARE\\LWD_Caregivers', 'get_custom_archive_template'));
 
 // Render metaboxes via class
-$metaboxes = new AMERICARE\LWD_Custom_Meta_Box;
+$metaboxes = new lexweb\AMERICARE\LWD_Custom_Meta_Box;
 
 if (!is_admin()) add_action( 'wp_enqueue_scripts', 'load_isotope' );
 
